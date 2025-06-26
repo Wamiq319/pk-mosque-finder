@@ -1,0 +1,21 @@
+{
+  "navigation": {
+    "home": "Home",
+    "mosques": "Mosques",
+    "events": "Events",
+    "marketplace": "Marketplace",
+    "contact": "Contact",
+    "about": "About"
+  },
+  "common": {
+    "switchLanguage": "Switch language",
+    "loading": "Loading..."
+  },
+  "home": {
+    "hero": {
+      "title": "Find Mosques Near You & Stay Connected with Your Community",
+      "subtitle": "Discover prayer times, community events, and Islamic products — all in one place.",
+      "cta": "Explore Mosques"
+    }
+  }
+}
