@@ -11,12 +11,20 @@ export default async function LocaleLayout({
 }) {
   const messages = await getMessages();
 
+  // Set direction based on locale
+  const dir = locale === "ur" ? "rtl" : "ltr";
+  const lang = locale === "ur" ? "ur" : "en";
+
   return (
-    <NextIntlClientProvider messages={messages}>
-      <div>
-        <Navbar />
-        <main>{children}</main>
-      </div>
-    </NextIntlClientProvider>
+    <html lang={lang} dir={dir}>
+      <body>
+        <NextIntlClientProvider messages={messages}>
+          <div>
+            <Navbar />
+            <main>{children}</main>
+          </div>
+        </NextIntlClientProvider>
+      </body>
+    </html>
   );
 }

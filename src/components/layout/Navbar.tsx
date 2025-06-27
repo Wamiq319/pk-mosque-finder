@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import { Button } from "../ui";
 import LanguageSwitcher from "./LanguageSwitcher";
 import { Landmark, Menu } from "lucide-react";
@@ -10,6 +11,7 @@ import { Landmark, Menu } from "lucide-react";
 const Navbar = () => {
   const [scrolled, setScrolled] = useState(false);
   const pathname = usePathname();
+  const t = useTranslations("navigation");
 
   useEffect(() => {
     const handleScroll = () => {
@@ -20,11 +22,11 @@ const Navbar = () => {
   }, []);
 
   const navItems = [
-    { name: "Home", href: "/home" },
-    { name: "Mosques", href: "/mosques" },
-    { name: "Events", href: "/events" },
-    { name: "Marketplace", href: "/marketplace" },
-    { name: "Contact", href: "/contact" },
+    { name: t("home"), href: "/home" },
+    { name: t("mosques"), href: "/mosques" },
+    { name: t("events"), href: "/events" },
+    { name: t("marketplace"), href: "/marketplace" },
+    { name: t("contact"), href: "/contact" },
   ];
 
   return (
@@ -59,12 +61,15 @@ const Navbar = () => {
             </Link>
           ))}
           <LanguageSwitcher />
+          <Button variant="secondary" rounded className="text-sm font-semibold">
+            Register
+          </Button>
         </div>
 
         {/* Mobile menu button */}
         <div className="md:hidden">
           <Button
-            variant="ghost"
+            variant="outline-yellow"
             size="sm"
             className="p-2 text-white hover:bg-green-500/30"
             onClick={() => {
