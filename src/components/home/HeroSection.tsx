@@ -1,13 +1,24 @@
 "use client";
 
+import { useEffect, useState, KeyboardEvent } from "react";
+import axios from "axios";
 import Link from "next/link";
-import { useState, KeyboardEvent } from "react";
 import { Button } from "../ui/Button";
 import { Input } from "../ui/Input";
-import { Locate, Clock, Star, Building2, Bell, UserCog } from "lucide-react";
+
+type IslamicInfo = {
+  gregorianDate: string;
+  hijriDate: string;
+  sunrise: string;
+  sunset: string;
+  eidFitr: string;
+  eidAdha: string;
+  ramadanStart: string;
+};
 
 const HeroSection = () => {
   const [searchQuery, setSearchQuery] = useState("");
+  const [info, setInfo] = useState<IslamicInfo | null>(null);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -21,10 +32,37 @@ const HeroSection = () => {
     if (e.key === "Enter") handleSearch();
   };
 
+  useEffect(() => {
+    const fetchIslamicInfo = async () => {
+      try {
+        const response = await axios.get(
+          `https://api.aladhan.com/v1/timingsByCity?city=Lahore&country=Pakistan&method=2`
+        );
+        const data = response.data.data;
+
+        const hijriDate = data.date.hijri;
+        const gregorianDate = data.date.gregorian;
+
+        setInfo({
+          gregorianDate: `${gregorianDate.weekday.en}, ${gregorianDate.day} ${gregorianDate.month.en} ${gregorianDate.year}`,
+          hijriDate: `${hijriDate.day} ${hijriDate.month.en} ${hijriDate.year} AH`,
+          sunrise: data.timings.Sunrise,
+          sunset: data.timings.Sunset,
+          ramadanStart: "1 March 2025", // You can calculate based on Hijri calendar later
+          eidFitr: "29 March 2025",
+          eidAdha: "7 June 2025",
+        });
+      } catch (error) {
+        console.error("Failed to fetch Islamic info", error);
+      }
+    };
+
+    fetchIslamicInfo();
+  }, []);
+
   return (
     <section className="min-h-screen pt-26 flex items-center justify-center bg-[#0B9444] text-white relative overflow-hidden">
       <div className="max-w-6xl px-4 text-center w-full">
-        {/* Heading */}
         <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
           Find Mosques Near You <br />
           <span className="text-[#F5B502]">& Stay Connected</span>
@@ -42,6 +80,7 @@ const HeroSection = () => {
               onChange={setSearchQuery}
               variant="secondary-outline"
               rounded
+              onKeyDown={handleKeyPress}
             />
             <Button
               variant="outline-yellow"
@@ -55,88 +94,41 @@ const HeroSection = () => {
           </div>
         </div>
 
-        {/* CTA Buttons */}
-        <div className="flex flex-col sm:flex-row gap-4 justify-center items-center mb-12">
-          <Link href="/mosques">
-            <Button variant="outline-yellow" rounded size="lg">
-              Explore Mosques
-            </Button>
-          </Link>
-          <Link href="/events">
-            <Button variant="outline-yellow" rounded size="lg">
-              View Events
-            </Button>
-          </Link>
-          <Link href="/marketplace">
-            <Button variant="outline-yellow" rounded size="lg">
-              Marketplace
-            </Button>
-          </Link>
-        </div>
+        {/* Islamic Info */}
+        {info && (
+          <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-8 shadow-lg space-y-3 text-sm md:text-base text-white">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
+              <div>
+                <p className="font-medium">📅 Gregorian Date:</p>
+                <p>{info.gregorianDate}</p>
+
+                <p className="font-medium mt-2">🕌 Islamic Date:</p>
+                <p>{info.hijriDate}</p>
+
+                <p className="font-medium mt-2">🌙 Ramadan Starts:</p>
+                <p>{info.ramadanStart}</p>
+              </div>
+
+              <div>
+                <p className="font-medium">🌅 Sunrise:</p>
+                <p>{info.sunrise}</p>
+
+                <p className="font-medium mt-2">🌇 Sunset:</p>
+                <p>{info.sunset}</p>
+
+                <p className="font-medium mt-2">🎉 Eid-ul-Adha:</p>
+                <p>{info.eidAdha}</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
 
-      {/* Floating Feature Icons with Glassmorphism - Random Placement */}
-
-      <div className="absolute top-24 left-10 z-30">
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center justify-center border border-white/20">
-          <Locate className="w-7 h-7 text-white mb-2" />
-          <span className="text-xs text-white font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-            Nearby
-          </span>
-        </div>
-      </div>
-
-      <div className="absolute top-60 left-32 z-30">
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center justify-center border border-white/20">
-          <Clock className="w-7 h-7 text-white mb-2" />
-          <span className="text-xs text-white font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-            Prayer Times
-          </span>
-        </div>
-      </div>
-
-      <div className="absolute bottom-20 right-7 left-24 z-30">
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center justify-center border border-white/20">
-          <Star className="w-7 h-7 text-white mb-2" />
-          <span className="text-xs text-white font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-            Favorites
-          </span>
-        </div>
-      </div>
-
-      <div className="absolute top-36 right-20 z-30">
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center justify-center border border-white/20">
-          <Building2 className="w-7 h-7 text-white mb-2" />
-          <span className="text-xs text-white font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-            Details
-          </span>
-        </div>
-      </div>
-
-      <div className="absolute top-80 right-32 z-30">
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center justify-center border border-white/20">
-          <Bell className="w-7 h-7 text-white mb-2" />
-          <span className="text-xs text-white font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-            Alerts
-          </span>
-        </div>
-      </div>
-
-      <div className="absolute bottom-8 right-16 z-30">
-        <div className="w-28 h-28 bg-white/10 backdrop-blur-md rounded-2xl shadow-2xl flex flex-col items-center justify-center border border-white/20">
-          <UserCog className="w-7 h-7 text-white mb-2" />
-          <span className="text-xs text-white font-medium bg-white/10 backdrop-blur-sm px-3 py-1 rounded-full border border-white/20">
-            Admin
-          </span>
-        </div>
-      </div>
-
-      {/* Decorative elements */}
+      {/* Decorative Blur */}
       <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl" />
       <div className="absolute top-20 right-20 w-32 h-32 bg-[#F5B502]/20 rounded-full blur-xl" />
       <div className="absolute bottom-20 left-20 w-24 h-24 bg-white/10 rounded-full blur-xl" />
 
-      {/* Bottom gradient overlay */}
       <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0B9444] to-transparent" />
     </section>
   );
