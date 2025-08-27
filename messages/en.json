@@ -13,9 +13,18 @@
   },
   "home": {
     "hero": {
-      "title": "Find Mosques Near You & Stay Connected with Your Community",
-      "subtitle": "Discover prayer times, community events, and Islamic products — all in one place.",
-      "cta": "Explore Mosques"
+      "headline1": "Connect with Fellow Muslims",
+      "headline2": "Find Mosques & Prayer Timings",
+      "ayah": "وَأَقِيمُوا الصَّلَاةَ وَآتُوا الزَّكَاةَ وَأَطِيعُوا الرَّسُولَ لَعَلَّكُمْ تُرْحَمُونَ",
+      "ayah_translation": "And establish prayer and give zakah and obey the Messenger - that you may receive mercy.",
+      "search_placeholder": "Search for mosques, events or prayer timings...",
+      "search_button": "Search",
+      "add_mosque": "Add Your Mosque",
+      "add_prayer": "Add Prayer Timings",
+      "find_mosque": "Find Mosque Near You",
+      "add_mosque_text": "Share your mosque’s details so anyone can pray comfortably and join events.",
+      "add_prayer_text": "Help others pray on time by adding accurate prayer schedules.",
+      "find_mosque_text": "Discover nearby mosques with facilities and events — your contribution helps everyone connect spiritually."
     }
   }
 }

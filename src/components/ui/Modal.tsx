@@ -1,3 +1,5 @@
+import React from "react";
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -5,12 +7,7 @@ interface ModalProps {
   title?: string;
 }
 
-export default function Modal({
-  isOpen,
-  onClose,
-  children,
-  title,
-}: ModalProps) {
+const Modal: React.FC<ModalProps> = ({ isOpen, onClose, children, title }) => {
   if (!isOpen) return null;
 
   return (
@@ -24,4 +21,6 @@ export default function Modal({
       </div>
     </div>
   );
-}
+};
+
+export { Modal };

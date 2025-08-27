@@ -73,4 +73,4 @@ const FeatureSection = () => {
   );
 };
 
-export default FeatureSection;
+export { FeatureSection };

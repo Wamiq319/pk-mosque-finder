@@ -11,7 +11,7 @@ const languages = [
   { code: "ur", label: "اردو" },
 ];
 
-export default function LanguageSwitcher() {
+const LanguageSwitcher = () => {
   const locale = useLocale();
   const pathname = usePathname();
   const router = useRouter();
@@ -45,4 +45,6 @@ export default function LanguageSwitcher() {
       {otherLanguageLabel}
     </Button>
   );
-}
+};
+
+export { LanguageSwitcher };

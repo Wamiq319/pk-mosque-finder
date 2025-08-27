@@ -5,7 +5,7 @@ import { useState, useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useTranslations } from "next-intl";
 import { Button } from "../ui";
-import LanguageSwitcher from "./LanguageSwitcher";
+import { LanguageSwitcher } from "./LanguageSwitcher";
 import { Landmark, Menu } from "lucide-react";
 
 const Navbar = () => {
@@ -84,4 +84,4 @@ const Navbar = () => {
   );
 };
 
-export default Navbar;
+export { Navbar };

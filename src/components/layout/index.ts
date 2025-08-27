@@ -1,3 +1,3 @@
-export { default as Navbar } from "./Navbar";
-export { default as Footer } from "./Footer";
-export { default as LanguageSwitcher } from "./LanguageSwitcher";
+export { Navbar } from "./Navbar";
+export { Footer } from "./Footer";
+export { LanguageSwitcher } from "./LanguageSwitcher";

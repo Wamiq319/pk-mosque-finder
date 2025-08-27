@@ -1,24 +1,15 @@
 "use client";
 
-import { useEffect, useState, KeyboardEvent } from "react";
-import axios from "axios";
-import Link from "next/link";
-import { Button } from "../ui/Button";
-import { Input } from "../ui/Input";
+import { useState, KeyboardEvent } from "react";
+import { useTranslations } from "next-intl";
 
-type IslamicInfo = {
-  gregorianDate: string;
-  hijriDate: string;
-  sunrise: string;
-  sunset: string;
-  eidFitr: string;
-  eidAdha: string;
-  ramadanStart: string;
-};
+import { Button, Input } from "@/components";
+
+import { Search, Users, Sun, MapPin, Star, Moon } from "lucide-react";
 
 const HeroSection = () => {
+  const t = useTranslations("home.hero");
   const [searchQuery, setSearchQuery] = useState("");
-  const [info, setInfo] = useState<IslamicInfo | null>(null);
 
   const handleSearch = () => {
     if (searchQuery.trim()) {
@@ -32,106 +23,100 @@ const HeroSection = () => {
     if (e.key === "Enter") handleSearch();
   };
 
-  useEffect(() => {
-    const fetchIslamicInfo = async () => {
-      try {
-        const response = await axios.get(
-          `https://api.aladhan.com/v1/timingsByCity?city=Lahore&country=Pakistan&method=2`
-        );
-        const data = response.data.data;
-
-        const hijriDate = data.date.hijri;
-        const gregorianDate = data.date.gregorian;
-
-        setInfo({
-          gregorianDate: `${gregorianDate.weekday.en}, ${gregorianDate.day} ${gregorianDate.month.en} ${gregorianDate.year}`,
-          hijriDate: `${hijriDate.day} ${hijriDate.month.en} ${hijriDate.year} AH`,
-          sunrise: data.timings.Sunrise,
-          sunset: data.timings.Sunset,
-          ramadanStart: "1 March 2025", // You can calculate based on Hijri calendar later
-          eidFitr: "29 March 2025",
-          eidAdha: "7 June 2025",
-        });
-      } catch (error) {
-        console.error("Failed to fetch Islamic info", error);
-      }
-    };
-
-    fetchIslamicInfo();
-  }, []);
-
   return (
-    <section className="min-h-screen pt-26 flex items-center justify-center bg-[#0B9444] text-white relative overflow-hidden">
-      <div className="max-w-6xl px-4 text-center w-full">
-        <h1 className="text-4xl md:text-6xl font-extrabold mb-6 leading-tight">
-          Find Mosques Near You <br />
-          <span className="text-[#F5B502]">& Stay Connected</span>
+    <section className="relative bg-gradient-to-b from-[#0B9444] to-[#06522B] text-white min-h-screen flex items-center justify-center px-4">
+      <div className="max-w-6xl w-full text-center space-y-8">
+        {/* Headline */}
+        <h1 className="text-4xl md:text-6xl font-extrabold leading-tight flex flex-col gap-3">
+          <span className="flex items-center justify-center gap-2">
+            <Moon size={36} /> {t("headline1")}
+          </span>
+          <span className="text-[#F5B502] flex items-center justify-center gap-2">
+            <Star size={36} /> {t("headline2")}
+          </span>
         </h1>
-        <p className="text-lg md:text-xl text-white/90 mb-8 max-w-2xl mx-auto">
-          Discover prayer times, events & community updates — all in one place.
+
+        {/* Quranic Ayah */}
+        <p
+          className={`text-xl md:text-2xl text-white/90 max-w-2xl mx-auto mt-4 rtl`}
+        >
+          {t("ayah")}
+        </p>
+        <p className="text-white/80 mt-2 italic max-w-2xl mx-auto">
+          {t("ayah_translation")}
         </p>
 
-        {/* Search */}
-        <div className="max-w-md mx-auto mb-8">
-          <div className="flex flex-col sm:flex-row gap-3">
-            <Input
-              placeholder="Search for mosques, events, or products..."
-              value={searchQuery}
-              onChange={setSearchQuery}
-              variant="secondary-outline"
-              rounded
-              onKeyDown={handleKeyPress}
-            />
-            <Button
-              variant="outline-yellow"
-              size="lg"
-              rounded
-              onClick={handleSearch}
-              className="whitespace-nowrap"
-            >
-              Search
-            </Button>
-          </div>
+        {/* Search Input */}
+        <div className="flex flex-col sm:flex-row justify-center gap-4 max-w-lg mx-auto mt-4">
+          <Input
+            placeholder={t("search_placeholder")}
+            value={searchQuery}
+            onChange={setSearchQuery}
+            variant="secondary-outline"
+            rounded
+            icon={<Search />}
+          />
+          <Button size="lg" rounded variant="secondary" onClick={handleSearch}>
+            <Search size={20} /> {t("search_button")}
+          </Button>
         </div>
 
-        {/* Islamic Info */}
-        {info && (
-          <div className="max-w-4xl mx-auto bg-white/10 backdrop-blur-md border border-white/20 rounded-2xl p-6 md:p-8 shadow-lg space-y-3 text-sm md:text-base text-white">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-left">
-              <div>
-                <p className="font-medium">📅 Gregorian Date:</p>
-                <p>{info.gregorianDate}</p>
-
-                <p className="font-medium mt-2">🕌 Islamic Date:</p>
-                <p>{info.hijriDate}</p>
-
-                <p className="font-medium mt-2">🌙 Ramadan Starts:</p>
-                <p>{info.ramadanStart}</p>
-              </div>
-
-              <div>
-                <p className="font-medium">🌅 Sunrise:</p>
-                <p>{info.sunrise}</p>
-
-                <p className="font-medium mt-2">🌇 Sunset:</p>
-                <p>{info.sunset}</p>
-
-                <p className="font-medium mt-2">🎉 Eid-ul-Adha:</p>
-                <p>{info.eidAdha}</p>
-              </div>
-            </div>
+        {/* CTA Buttons */}
+        <div className="flex flex-col sm:flex-row justify-center gap-6 mt-6">
+          {/* Add Mosque */}
+          <div className="flex flex-col items-center">
+            <Button
+              size="lg"
+              rounded
+              variant="rounded"
+              onClick={() => (window.location.href = "/add-mosque")}
+            >
+              <Users size={20} /> {t("add_mosque")}
+            </Button>
+            <span className="mt-2 text-sm text-white/80 max-w-xs">
+              {t("add_mosque_text")}
+            </span>
           </div>
-        )}
+
+          {/* Add Prayer Timings */}
+          <div className="flex flex-col items-center">
+            <Button
+              size="lg"
+              rounded
+              variant="rounded"
+              onClick={() => (window.location.href = "/add-prayer-timing")}
+            >
+              <Sun size={20} /> {t("add_prayer")}
+            </Button>
+            <span className="mt-2 text-sm text-white/80 max-w-xs">
+              {t("add_prayer_text")}
+            </span>
+          </div>
+
+          {/* Find Mosque Near You */}
+          <div className="flex flex-col items-center">
+            <Button
+              size="lg"
+              rounded
+              variant="rounded"
+              onClick={() => (window.location.href = "/find-mosques-near-me")}
+            >
+              <MapPin size={20} /> {t("find_mosque")}
+            </Button>
+            <span className="mt-2 text-sm text-white/80 max-w-xs">
+              {t("find_mosque_text")}
+            </span>
+          </div>
+        </div>
       </div>
 
-      {/* Decorative Blur */}
-      <div className="absolute top-10 left-10 w-20 h-20 bg-white/10 rounded-full blur-xl" />
-      <div className="absolute top-20 right-20 w-32 h-32 bg-[#F5B502]/20 rounded-full blur-xl" />
-      <div className="absolute bottom-20 left-20 w-24 h-24 bg-white/10 rounded-full blur-xl" />
-
-      <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0B9444] to-transparent" />
+      {/* Decorative Circles */}
+      <div className="absolute top-10 left-10 w-24 h-24 bg-yellow-300/20 rounded-full blur-3xl animate-pulse" />
+      <div className="absolute bottom-20 right-10 w-32 h-32 bg-white/10 rounded-full blur-3xl" />
+      <div className="absolute top-1/2 left-1/4 w-40 h-40 bg-yellow-400/10 rounded-full blur-3xl" />
+      <div className="absolute bottom-1/4 right-1/3 w-36 h-36 bg-white/10 rounded-full blur-3xl" />
     </section>
   );
 };
 
-export default HeroSection;
+export { HeroSection };
